@@ -1,4 +1,4 @@
-import * as signals from "@gnome-shell-ts-mapping/signals";
+import * as signals from "@gnome-shell-ts-declarations/signals";
 import * as GObject from "@gi-types/gobject2";
 
 

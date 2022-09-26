@@ -1,5 +1,5 @@
 {
-  "name": "@gnome-shell-ts-mapping/ui",
+  "name": "@gnome-shell-ts-declarations/ui",
   "types": "index",
   "version": "1.0.0",
   "main": "index.js",

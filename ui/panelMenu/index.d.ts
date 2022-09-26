@@ -1,5 +1,5 @@
 import St from "@gi-types/st1";
-import { PopupMenu } from "@gnome-shell-ts-mapping/ui";
+import { PopupMenu } from "@gnome-shell-ts-declarations/ui";
 
 export namespace panelMenu {
     export class ButtonBox extends St.Widget {

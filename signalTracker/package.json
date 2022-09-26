@@ -1,5 +1,5 @@
 {
-  "name": "@gnome-shell-ts-mapping/signaltracker",
+  "name": "@gnome-shell-ts-declarations/signaltracker",
   "types": "index",
   "version": "1.0.0",
   "main": "index.js",

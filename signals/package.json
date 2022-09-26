@@ -1,5 +1,5 @@
 {
-  "name": "@gnome-shell-ts-mapping/signals",
+  "name": "@gnome-shell-ts-declarations/signals",
   "types": "index",
   "version": "1.0.0",
   "main": "index.js",
