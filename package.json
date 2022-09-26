@@ -1,7 +1,6 @@
 {
   "name": "gnome-shell-ts-declarations",
   "version": "1.0.0",
-  "main": "",
   "types": "index.d.ts",
   "license": "MIT",
   "dependencies": {
