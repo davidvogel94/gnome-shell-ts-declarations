@@ -1,0 +1,10 @@
+{
+  "name": "@gnome-shell-ts-mapping/signaltracker",
+  "types": "index",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@gnome-shell-ts-mapping/signals": "^1.0.0"
+  }
+}
