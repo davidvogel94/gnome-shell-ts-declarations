@@ -6,10 +6,10 @@ import GObject from '@gi-types/gobject2';
 export class BoxPointer extends St.Widget {
   constructor(arrowSide: St.Side, binProperties: St.Bin.ConstructorProperties);
   vfunc_captured_event(event: Clutter.Event): typeof Clutter.EVENT_PROPAGATE;
-  open(animate: BoxPointer.PopupAnimation, onComplete: function(): void): void;
-  close(animate: BoxPointer.PopupAnimation, onComplete: function(): void): void;
-  vfunc_get_preferred_width(forHeight: number): number;
-  vfunc_get_preferred_height(forWidth: number): number;
+  open(animate: BoxPointer.PopupAnimation, onComplete: () => void): void;
+  close(animate: BoxPointer.PopupAnimation, onComplete: () => void): void;
+  vfunc_get_preferred_width(forHeight: number): [number, number];
+  vfunc_get_preferred_height(forWidth: number): [number, number];
   vfunc_allocate(box: Clutter.ActorBox): void;
   setPosition(sourceActor: Clutter.Actor, alignment: Clutter.ActorAlign): void;
   setSourceAlignment(alignment: Clutter.ActorAlign): void;
@@ -28,16 +28,16 @@ export namespace BoxPointer {
   }
 }
 
-export class PopupMenu extends PopupMenuBase {
-  constructor(sourceActor: Clutter.Actor, arrowAlignment: Clutter.ActorAlign, arrowSide: St.Side);
-
-  setArrowOrigin(origin: St.Side): void;
-  setSourceAlignment(alignment: Clutter.ActorAlign): void;
-  open(animate: BoxPointer.PopupAnimation): void; // emits 'open-state-changed'
-  close(animate: BoxPointer.PopupAnimation): void; // emits 'open-state-changed'
-  destroy(): void;
-}
-export namespace PopupMenu {
+export namespace popupMenu {
+  export class PopupMenu extends popupMenu.PopupMenuBase {
+    constructor(sourceActor: Clutter.Actor, arrowAlignment: Clutter.ActorAlign, arrowSide: St.Side);
+  
+    setArrowOrigin(origin: St.Side): void;
+    setSourceAlignment(alignment: Clutter.ActorAlign): void;
+    open(animate: BoxPointer.PopupAnimation): void; // emits 'open-state-changed'
+    close(animate: BoxPointer.PopupAnimation): void; // emits 'open-state-changed'
+    destroy(): void;
+  }
   export enum Ornament {
     NONE = 0,
     DOT = 1,
@@ -49,11 +49,13 @@ export namespace PopupMenu {
 
   export class PopupMenuBase extends Signals.EventEmitter {
     constructor(sourceActor: Clutter.Actor, styleClass: string);
+    get sourceActor(): Clutter.Actor;
+    get focusActor(): Clutter.Actor;
     getSensitive(): boolean;
     setSensitive(sensitive: boolean): void;
     get sensitive(): boolean;
     set sensitive(sensitive: boolean);
-    addAction(title: string, callback: function(Clutter.Event), icon: St.Icon): PopupMenuItem;
+    addAction(title: string, callback: (arg0: Clutter.Event) => void, icon: St.Icon): PopupMenuItem;
     addSettingsAction(title: string, desktopFile: string): PopupMenuItem;
     isEmpty(): boolean;
     itemActivated(animate: BoxPointer.PopupAnimation): void;
@@ -67,7 +69,7 @@ export namespace PopupMenu {
   }
 
   export class PopupBaseMenuItem extends St.BoxLayout {
-    constructor(params = {});
+    constructor(params?: {});
     get actor(): PopupBaseMenuItem;
 
     vfunc_button_press_event(): typeof Clutter.EVENT_PROPAGATE;
@@ -87,7 +89,7 @@ export namespace PopupMenu {
     setOrnament(ornament: Ornament): void;
   }
   export class PopupMenuItem extends PopupBaseMenuItem {
-    constructor(text: string, params = {});
+    constructor(text: string, params?: {});
   }
   export class PopupSeparatorMenuItem extends PopupBaseMenuItem {
     constructor(text: string);
@@ -99,7 +101,7 @@ export namespace PopupMenu {
     toggle(): void;
   }
   export class PopupSwitchMenuItem extends PopupBaseMenuItem {
-    constructor(text: string, active: boolean, params = {});
+    constructor(text: string, active: boolean, params?: {});
     setStatus(text: string): void;
     activate(event: Clutter.Event): void;
     toggle(): void;
@@ -108,7 +110,7 @@ export namespace PopupMenu {
     checkAccessibleState(): void;
   }
   export class PopupImageMenuItem extends PopupBaseMenuItem {
-    constructor(text: string, icon: St.Icon, params = {});
+    constructor(text: string, icon: St.Icon, params?: {});
     setIcon(icon: St.Icon): void;
   }
 
@@ -142,7 +144,7 @@ export namespace PopupMenu {
     setSubmenuShown(open: boolean): void;
     vfunc_key_press_event(keyPressEvent: Clutter.KeyEvent): typeof Clutter.EVENT_PROPAGATE;
     activate(_event: Clutter.Event): void;
-    vfunc_button_release_event(): void;
+    vfunc_button_release_event(): typeof Clutter.EVENT_STOP;
     vfunc_touch_event(touchEvent: Clutter.TouchEvent): typeof Clutter.EVENT_PROPAGATE;
   }
   
@@ -150,6 +152,8 @@ export namespace PopupMenu {
     constructor(owner: any, grabParams: Map<string, any>);
     addMenu(menu: PopupMenuBase, position: number): void;
     removeMenu(menu: PopupMenuBase): void;
+    ignoreRelease(): void;
+
   }
 }
 
@@ -173,8 +177,9 @@ export namespace panelMenu {
     parent: St.Widget;
   }
   export class Button extends ButtonBox {
+    menu: popupMenu.PopupMenuBase;
     public setSensitive(sensitive: boolean): void;
-    public setMenu(menu: PopupMenu): void;
+    public setMenu(menu: popupMenu.PopupMenuBase): void;
   }
 }
 export class panelMenu {}
