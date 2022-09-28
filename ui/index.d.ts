@@ -29,9 +29,16 @@ export namespace BoxPointer {
 }
 
 export namespace popupMenu {
-  export class PopupMenu extends popupMenu.PopupMenuBase {
-    constructor(sourceActor: Clutter.Actor, arrowAlignment: Clutter.ActorAlign, arrowSide: St.Side);
+  export module PopupMenu {
+    export interface PopupMenuConstructorProperties {
+      sourceActor: Clutter.Actor<Clutter.LayoutManager, Clutter.ContentPrototype>;
+      arrowAlignment: Clutter.ActorAlign;
+      arrowSide: St.Side
+    }
+  }
   
+  export class PopupMenu extends popupMenu.PopupMenuBase {
+    constructor(sourceActor: Clutter.Actor, arrowAlignment: Clutter.ActorAlign, arrowSide: St.Side, styleClass?: string);
     setArrowOrigin(origin: St.Side): void;
     setSourceAlignment(alignment: Clutter.ActorAlign): void;
     open(animate: BoxPointer.PopupAnimation): void; // emits 'open-state-changed'
@@ -88,7 +95,7 @@ export namespace popupMenu {
     set sensitive(sensitive: boolean);
     setOrnament(ornament: Ornament): void;
   }
-  export class PopupMenuItem extends PopupBaseMenuItem {
+  export class PopupMenuItem extends PopupBaseMenuItem implements PopupBaseMenuItem {
     constructor(text: string, params?: {});
   }
   export class PopupSeparatorMenuItem extends PopupBaseMenuItem {
@@ -100,7 +107,7 @@ export namespace popupMenu {
     set state(state: boolean);
     toggle(): void;
   }
-  export class PopupSwitchMenuItem extends PopupBaseMenuItem {
+  export class PopupSwitchMenuItem extends PopupBaseMenuItem implements PopupBaseMenuItem {
     constructor(text: string, active: boolean, params?: {});
     setStatus(text: string): void;
     activate(event: Clutter.Event): void;
@@ -109,7 +116,7 @@ export namespace popupMenu {
     setToggleState(state: boolean): void;
     checkAccessibleState(): void;
   }
-  export class PopupImageMenuItem extends PopupBaseMenuItem {
+  export class PopupImageMenuItem extends PopupBaseMenuItem implements PopupBaseMenuItem {
     constructor(text: string, icon: St.Icon, params?: {});
     setIcon(icon: St.Icon): void;
   }
