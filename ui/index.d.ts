@@ -75,6 +75,15 @@ export namespace popupMenu {
     destroy(): void;
   }
 
+  export module PopupBaseMenuItem {
+    export interface PopupBaseMenuItemConstructorProperties extends St.BoxLayout.ConstructorProperties {
+      reactive: boolean;
+      activate: boolean;
+      hover: boolean;
+      style_class: string;
+      can_focus: boolean;  
+    }
+  }
   export class PopupBaseMenuItem extends St.BoxLayout {
     constructor(params?: {});
     get actor(): PopupBaseMenuItem;
