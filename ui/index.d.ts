@@ -1,6 +1,6 @@
 import St from '@gi-types/st1';
 import Clutter from '@gi-types/clutter10';
-import Signals from '@gnome-shell-ts-declarations/signals';
+import { signals } from '@gnome-shell-ts-declarations/misc';
 import GObject from '@gi-types/gobject2';
 
 export class BoxPointer extends St.Widget {
@@ -24,7 +24,7 @@ export namespace BoxPointer {
     NONE = 0,
     SLIDE = 1 << 0,
     FADE = 1 << 0,
-    FULL = ~0
+    FULL = ~0,
   }
 }
 
@@ -33,12 +33,17 @@ export namespace popupMenu {
     export interface PopupMenuConstructorProperties {
       sourceActor: Clutter.Actor<Clutter.LayoutManager, Clutter.ContentPrototype>;
       arrowAlignment: Clutter.ActorAlign;
-      arrowSide: St.Side
+      arrowSide: St.Side;
     }
   }
-  
+
   export class PopupMenu extends popupMenu.PopupMenuBase {
-    constructor(sourceActor: Clutter.Actor, arrowAlignment: Clutter.ActorAlign, arrowSide: St.Side, styleClass?: string);
+    constructor(
+      sourceActor: Clutter.Actor,
+      arrowAlignment: Clutter.ActorAlign,
+      arrowSide: St.Side,
+      styleClass?: string,
+    );
     setArrowOrigin(origin: St.Side): void;
     setSourceAlignment(alignment: Clutter.ActorAlign): void;
     open(animate: BoxPointer.PopupAnimation): void; // emits 'open-state-changed'
@@ -51,10 +56,10 @@ export namespace popupMenu {
     CHECK = 2,
     HIDDEN = 3,
   }
-  export function isPopupMenuItemVisible(child: GObject.Object);
+  export function isPopupMenuItemVisible(child: GObject.Object): boolean;
   export function arrowIcon(side: St.Side): St.Icon;
 
-  export class PopupMenuBase extends Signals.EventEmitter {
+  export class PopupMenuBase extends signals.EventEmitter {
     constructor(sourceActor: Clutter.Actor, styleClass: string);
     get sourceActor(): Clutter.Actor;
     get focusActor(): Clutter.Actor;
@@ -81,11 +86,11 @@ export namespace popupMenu {
       activate: boolean;
       hover: boolean;
       style_class: string;
-      can_focus: boolean;  
+      can_focus: boolean;
     }
   }
   export class PopupBaseMenuItem extends St.BoxLayout {
-    constructor(params?: {});
+    constructor(params?: Record<string, any>);
     get actor(): PopupBaseMenuItem;
 
     vfunc_button_press_event(): typeof Clutter.EVENT_PROPAGATE;
@@ -105,7 +110,7 @@ export namespace popupMenu {
     setOrnament(ornament: Ornament): void;
   }
   export class PopupMenuItem extends PopupBaseMenuItem implements PopupBaseMenuItem {
-    constructor(text: string, params?: {});
+    constructor(text: string, params?: Record<string, any>);
   }
   export class PopupSeparatorMenuItem extends PopupBaseMenuItem {
     constructor(text: string);
@@ -117,20 +122,20 @@ export namespace popupMenu {
     toggle(): void;
   }
   export class PopupSwitchMenuItem extends PopupBaseMenuItem implements PopupBaseMenuItem {
-    constructor(text: string, active: boolean, params?: {});
+    constructor(text: string, active: boolean, params?: Record<string, any>);
     setStatus(text: string): void;
     activate(event: Clutter.Event): void;
     toggle(): void;
     get state(): boolean;
-    setToggleState(state: boolean): void;
+    setToggleState(state?: boolean): void;
     checkAccessibleState(): void;
   }
   export class PopupImageMenuItem extends PopupBaseMenuItem implements PopupBaseMenuItem {
-    constructor(text: string, icon: St.Icon, params?: {});
+    constructor(text: string, icon: St.Icon, params?: Record<string, any>);
     setIcon(icon: St.Icon): void;
   }
 
-  export class PopupDummyMenu extends Signals.EventEmitter {
+  export class PopupDummyMenu extends signals.EventEmitter {
     constructor(sourceActor: Clutter.Actor);
     getSensitive(): boolean;
     get sensitive(): boolean;
@@ -163,18 +168,18 @@ export namespace popupMenu {
     vfunc_button_release_event(): typeof Clutter.EVENT_STOP;
     vfunc_touch_event(touchEvent: Clutter.TouchEvent): typeof Clutter.EVENT_PROPAGATE;
   }
-  
+
   export class PopupMenuManager {
     constructor(owner: any, grabParams: Map<string, any>);
     addMenu(menu: PopupMenuBase, position: number): void;
     removeMenu(menu: PopupMenuBase): void;
     ignoreRelease(): void;
-
   }
 }
 
 export class main {
   static panel: panel;
+  static notify(msg: string, details?: string): void;
 }
 
 export class panel extends St.Widget {
